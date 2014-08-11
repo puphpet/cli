@@ -52,7 +52,7 @@ func generate() {
 		os.Exit(1)
 	}
 
-	response, err := http.PostForm("http://puphpet.dev/app_dev.php/generate-archive",
+	response, err := http.PostForm("https://puphpet.com/generate-archive",
 		url.Values{"config": {string(file_contents)}})
 
 	defer response.Body.Close()
