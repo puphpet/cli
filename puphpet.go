@@ -54,6 +54,11 @@ func generate() {
 	response, err := http.PostForm("https://puphpet.com/generate-archive",
 		url.Values{"config": {string(file_contents)}})
 
+	if err != nil {
+		fmt.Printf("%s\n", err)
+		os.Exit(1)
+	}
+
 	defer response.Body.Close()
 
 	if response.StatusCode != 200 {
