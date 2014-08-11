@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"runtime"
 )
 
 func main() {
@@ -20,6 +21,9 @@ func main() {
 	switch action {
 	case "gen", "generate":
 		generate()
+		break
+	case "selfupdate", "self-update":
+		self_update()
 		break
 	default:
 		help()
@@ -80,6 +84,50 @@ func generate() {
 		fmt.Printf("%s", err)
 		os.Exit(1)
 	}
+}
+
+func self_update() {
+	var current_file string = ""
+	var base_url string = "http://files.puphpet.com/cli"
+	var file_url string = ""
+
+	switch runtime.GOOS {
+	case "windows":
+		current_file = "puphpet.exe"
+		file_url = base_url + "/win-386/puphpet.exe"
+		break
+	case "darwin":
+		current_file = "puphpet"
+		file_url = base_url + "/darwin-386/puphpet"
+	case "linux":
+		current_file = "puphpet"
+		file_url = base_url + "/linux-386/puphpet"
+	}
+
+	out, err := os.Create("puphpet.tmp")
+	defer out.Close()
+
+	if err != nil {
+		fmt.Printf("%s", err)
+		os.Exit(1)
+	}
+
+	response, err := http.Get(file_url)
+
+	if err != nil {
+		fmt.Printf("%s", err)
+		os.Exit(1)
+	}
+
+	defer response.Body.Close()
+
+	if _, err = io.Copy(out, response.Body); err != nil {
+		fmt.Printf("%s", err)
+		os.Exit(1)
+	}
+
+	os.Remove(current_file)
+	os.Rename("puphpet.tmp", current_file)
 }
 
 func help() {
