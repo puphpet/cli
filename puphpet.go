@@ -45,10 +45,6 @@ func generate() {
 		output_file = os.Args[3]
 	}
 
-	if !strings.Contains(config_file, ".yaml") {
-		config_file = config_file + ".yaml"
-	}
-
 	file_contents, err := ioutil.ReadFile(config_file)
 
 	if err != nil {
@@ -102,7 +98,6 @@ Usage:
 Examples:
 	puphpet generate config.yaml                => Sends contents of "config.yaml" and receives "puphpet.zip"
 	puphpet generate config.yaml downloaded.zip => Sends contents of "config.yaml" and receives "downloaded.zip"
-	puphpet generate config downloaded.zip      => Sends contents of "config.yaml" and receives "downloaded.zip"
 `
 
 	fmt.Print(usage)
